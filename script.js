@@ -5,11 +5,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // 获取所有交互按钮
     const interactiveButtons = document.querySelectorAll('.interactive-button');
     
+    // 获取所有国家路径
+    const countryPaths = document.querySelectorAll('.country-path');
+    
     // 为每个按钮添加点击事件监听器
     interactiveButtons.forEach(button => {
         button.addEventListener('click', handleButtonClick);
         button.addEventListener('mouseenter', handleButtonHover);
         button.addEventListener('mouseleave', handleButtonLeave);
+    });
+    
+    // 为国家路径添加悬停事件
+    countryPaths.forEach(path => {
+        path.addEventListener('mouseenter', handleCountryHover);
+        path.addEventListener('mouseleave', handleCountryLeave);
+        path.addEventListener('click', handleCountryClick);
     });
     
     // 处理按钮点击事件
@@ -71,6 +81,131 @@ document.addEventListener('DOMContentLoaded', function() {
         hideTooltip();
     }
     
+    // 处理国家悬停事件
+    function handleCountryHover(event) {
+        const country = event.target.getAttribute('data-country');
+        const countryNames = {
+            'usa': 'United States',
+            'china': 'China',
+            'canada': 'Canada',
+            'mexico': 'Mexico',
+            'brazil': 'Brazil',
+            'argentina': 'Argentina',
+            'chile': 'Chile',
+            'western-europe': 'Western Europe',
+            'eastern-europe': 'Eastern Europe',
+            'northern-europe': 'Northern Europe',
+            'north-africa': 'North Africa',
+            'west-africa': 'West Africa',
+            'central-africa': 'Central Africa',
+            'east-africa': 'East Africa',
+            'south-africa': 'South Africa',
+            'russia': 'Russia',
+            'india': 'India',
+            'japan': 'Japan',
+            'southeast-asia': 'Southeast Asia',
+            'australia': 'Australia',
+            'new-zealand': 'New Zealand'
+        };
+        
+        const countryName = countryNames[country] || country;
+        showTooltip(event, `Country: ${countryName}`);
+        
+        // 高亮相关连接线
+        highlightConnections(country);
+    }
+    
+    // 处理国家离开事件
+    function handleCountryLeave(event) {
+        hideTooltip();
+        // 移除连接线高亮
+        removeConnectionHighlights();
+    }
+    
+    // 处理国家点击事件
+    function handleCountryClick(event) {
+        const country = event.target.getAttribute('data-country');
+        
+        // 如果是可交互的国家，触发按钮点击
+        if (country === 'usa' || country === 'china') {
+            const button = document.querySelector(`[data-country="${country}"]`);
+            if (button) {
+                button.click();
+            }
+        } else {
+            // 显示国家信息
+            const countryNames = {
+                'canada': 'Canada - 加拿大',
+                'mexico': 'Mexico - 墨西哥',
+                'brazil': 'Brazil - 巴西',
+                'argentina': 'Argentina - 阿根廷',
+                'chile': 'Chile - 智利',
+                'western-europe': 'Western Europe - 西欧',
+                'eastern-europe': 'Eastern Europe - 东欧',
+                'northern-europe': 'Northern Europe - 北欧',
+                'north-africa': 'North Africa - 北非',
+                'west-africa': 'West Africa - 西非',
+                'central-africa': 'Central Africa - 中非',
+                'east-africa': 'East Africa - 东非',
+                'south-africa': 'South Africa - 南非',
+                'russia': 'Russia - 俄罗斯',
+                'india': 'India - 印度',
+                'japan': 'Japan - 日本',
+                'southeast-asia': 'Southeast Asia - 东南亚',
+                'australia': 'Australia - 澳大利亚',
+                'new-zealand': 'New Zealand - 新西兰'
+            };
+            
+            const countryName = countryNames[country] || country;
+            showNotification(`Selected: ${countryName}`, 'info');
+        }
+    }
+    
+    // 高亮相关连接线
+    function highlightConnections(country) {
+        const connections = document.querySelectorAll('#connection-lines line');
+        
+        connections.forEach(line => {
+            // 根据国家位置判断是否高亮连接线
+            const lineX1 = parseFloat(line.getAttribute('x1'));
+            const lineY1 = parseFloat(line.getAttribute('y1'));
+            const lineX2 = parseFloat(line.getAttribute('x2'));
+            const lineY2 = parseFloat(line.getAttribute('y2'));
+            
+            let shouldHighlight = false;
+            
+            switch(country) {
+                case 'usa':
+                    shouldHighlight = (lineX1 === 235 && lineY1 === 250) || (lineX2 === 235 && lineY2 === 250);
+                    break;
+                case 'china':
+                    shouldHighlight = (lineX1 === 750 && lineY1 === 235) || (lineX2 === 750 && lineY2 === 235);
+                    break;
+                case 'western-europe':
+                case 'eastern-europe':
+                case 'northern-europe':
+                    shouldHighlight = (lineX1 === 530 && lineY1 === 200) || (lineX2 === 530 && lineY2 === 200);
+                    break;
+            }
+            
+            if (shouldHighlight) {
+                line.style.stroke = '#e74c3c';
+                line.style.strokeWidth = '4';
+                line.style.opacity = '0.9';
+            }
+        });
+    }
+    
+    // 移除连接线高亮
+    function removeConnectionHighlights() {
+        const connections = document.querySelectorAll('#connection-lines line');
+        connections.forEach(line => {
+            line.style.stroke = '#4a90e2';
+            line.style.strokeWidth = '2';
+            line.style.opacity = '0.6';
+        });
+    }
+    
     // 显示通知消息
     function showNotification(message, type = 'info') {
         // 移除已存在的通知
@@ -83,22 +218,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const notification = document.createElement('div');
         notification.className = `notification ${type}`;
         notification.textContent = message;
-        
-        // 添加样式
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: ${type === 'success' ? '#27ae60' : type === 'error' ? '#e74c3c' : '#3498db'};
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1000;
-            font-weight: 500;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-        `;
         
         document.body.appendChild(notification);
         
@@ -126,20 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const tooltip = document.createElement('div');
         tooltip.className = 'tooltip';
         tooltip.textContent = message;
-        
-        tooltip.style.cssText = `
-            position: absolute;
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            white-space: nowrap;
-            z-index: 1000;
-            pointer-events: none;
-            transform: translate(-50%, -100%);
-            margin-top: -10px;
-        `;
         
         document.body.appendChild(tooltip);
         
@@ -188,14 +293,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 200);
     }, 500);
     
+    // 添加地图加载动画
+    const continents = document.querySelectorAll('.continent');
+    continents.forEach((continent, index) => {
+        continent.style.opacity = '0';
+        continent.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            continent.style.transition = 'all 0.5s ease';
+            continent.style.opacity = '1';
+            continent.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+    
     // 控制台欢迎信息
     console.log(`
-    🌍 Interactive World Map
-    ========================
+    🌍 Interactive World Map v2.0
+    =============================
     • Click China button → DeepSeek
     • Click USA button → ChatGPT
-    • Hover for tooltips
-    • Keyboard accessible
+    • Hover countries for info
+    • Interactive connections
+    • Responsive design
     `);
 });
 

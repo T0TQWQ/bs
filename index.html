@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive World Map</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive World Map</h1>
+        <div class="map-container">
+            <svg id="world-map" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+                <!-- 世界地图轮廓 - 简化的点线结构 -->
+                
+                <!-- 北美洲 -->
+                <g id="north-america">
+                    <!-- 美国轮廓 -->
+                    <path d="M150,180 L250,170 L280,200 L270,250 L200,260 L150,240 Z" 
+                          fill="none" stroke="#4a90e2" stroke-width="2" stroke-dasharray="5,5"/>
+                    <!-- 美国的点 -->
+                    <circle cx="180" cy="200" r="3" fill="#4a90e2"/>
+                    <circle cx="220" cy="190" r="3" fill="#4a90e2"/>
+                    <circle cx="250" cy="210" r="3" fill="#4a90e2"/>
+                    <circle cx="200" cy="230" r="3" fill="#4a90e2"/>
+                    
+                    <!-- 美国标签和交互按钮 -->
+                    <text x="215" y="275" text-anchor="middle" class="country-label">United States</text>
+                    <circle cx="215" cy="285" r="12" class="interactive-button usa-button" 
+                            data-country="usa" fill="#ff6b6b" stroke="#fff" stroke-width="2"/>
+                    <text x="215" y="290" text-anchor="middle" class="button-text">US</text>
+                </g>
+                
+                <!-- 欧洲 -->
+                <g id="europe">
+                    <path d="M450,150 L520,140 L540,180 L500,200 L450,190 Z" 
+                          fill="none" stroke="#4a90e2" stroke-width="2" stroke-dasharray="5,5"/>
+                    <circle cx="470" cy="160" r="3" fill="#4a90e2"/>
+                    <circle cx="500" cy="155" r="3" fill="#4a90e2"/>
+                    <circle cx="520" cy="175" r="3" fill="#4a90e2"/>
+                    
+                    <text x="485" y="215" text-anchor="middle" class="country-label">Europe</text>
+                </g>
+                
+                <!-- 亚洲 -->
+                <g id="asia">
+                    <!-- 中国轮廓 -->
+                    <path d="M650,180 L750,170 L780,200 L770,250 L700,260 L650,240 Z" 
+                          fill="none" stroke="#4a90e2" stroke-width="2" stroke-dasharray="5,5"/>
+                    <!-- 中国的点 -->
+                    <circle cx="680" cy="200" r="3" fill="#4a90e2"/>
+                    <circle cx="720" cy="190" r="3" fill="#4a90e2"/>
+                    <circle cx="750" cy="210" r="3" fill="#4a90e2"/>
+                    <circle cx="700" cy="230" r="3" fill="#4a90e2"/>
+                    <circle cx="730" cy="240" r="3" fill="#4a90e2"/>
+                    
+                    <!-- 中国标签和交互按钮 -->
+                    <text x="715" y="275" text-anchor="middle" class="country-label">China</text>
+                    <circle cx="715" cy="285" r="12" class="interactive-button china-button" 
+                            data-country="china" fill="#50c878" stroke="#fff" stroke-width="2"/>
+                    <text x="715" y="290" text-anchor="middle" class="button-text">CN</text>
+                    
+                    <!-- 其他亚洲国家 -->
+                    <path d="M580,200 L630,190 L640,220 L600,230 Z" 
+                          fill="none" stroke="#4a90e2" stroke-width="2" stroke-dasharray="5,5"/>
+                    <circle cx="600" cy="210" r="3" fill="#4a90e2"/>
+                    <text x="610" y="245" text-anchor="middle" class="country-label">India</text>
+                </g>
+                
+                <!-- 非洲 -->
+                <g id="africa">
+                    <path d="M480,250 L550,240 L570,320 L520,340 L480,320 Z" 
+                          fill="none" stroke="#4a90e2" stroke-width="2" stroke-dasharray="5,5"/>
+                    <circle cx="500" cy="270" r="3" fill="#4a90e2"/>
+                    <circle cx="530" cy="280" r="3" fill="#4a90e2"/>
+                    <circle cx="520" cy="310" r="3" fill="#4a90e2"/>
+                    
+                    <text x="525" y="355" text-anchor="middle" class="country-label">Africa</text>
+                </g>
+                
+                <!-- 南美洲 -->
+                <g id="south-america">
+                    <path d="M250,280 L320,270 L340,380 L280,400 L250,360 Z" 
+                          fill="none" stroke="#4a90e2" stroke-width="2" stroke-dasharray="5,5"/>
+                    <circle cx="270" cy="300" r="3" fill="#4a90e2"/>
+                    <circle cx="300" cy="320" r="3" fill="#4a90e2"/>
+                    <circle cx="290" cy="360" r="3" fill="#4a90e2"/>
+                    
+                    <text x="295" y="415" text-anchor="middle" class="country-label">South America</text>
+                </g>
+                
+                <!-- 澳洲 -->
+                <g id="oceania">
+                    <path d="M750,320 L850,310 L870,350 L800,360 Z" 
+                          fill="none" stroke="#4a90e2" stroke-width="2" stroke-dasharray="5,5"/>
+                    <circle cx="780" cy="330" r="3" fill="#4a90e2"/>
+                    <circle cx="820" cy="335" r="3" fill="#4a90e2"/>
+                    
+                    <text x="810" y="375" text-anchor="middle" class="country-label">Australia</text>
+                </g>
+                
+                <!-- 连接线 -->
+                <g id="connection-lines">
+                    <line x1="215" y1="250" x2="485" y2="180" stroke="#4a90e2" stroke-width="1" opacity="0.5" stroke-dasharray="3,3"/>
+                    <line x1="485" y1="190" x2="715" y2="250" stroke="#4a90e2" stroke-width="1" opacity="0.5" stroke-dasharray="3,3"/>
+                    <line x1="525" y1="240" x2="525" y2="320" stroke="#4a90e2" stroke-width="1" opacity="0.5" stroke-dasharray="3,3"/>
+                    <line x1="295" y1="280" x2="480" y2="300" stroke="#4a90e2" stroke-width="1" opacity="0.5" stroke-dasharray="3,3"/>
+                    <line x1="715" y1="250" x2="810" y2="320" stroke="#4a90e2" stroke-width="1" opacity="0.5" stroke-dasharray="3,3"/>
+                </g>
+            </svg>
+        </div>
+        
+        <div class="instructions">
+            <p>Click on the interactive buttons below country names to visit related websites:</p>
+            <ul>
+                <li><span class="china-indicator"></span> China → DeepSeek</li>
+                <li><span class="usa-indicator"></span> United States → ChatGPT</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
